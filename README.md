@@ -1,0 +1,2 @@
+# usefaircoin
+Usefaircoin repo
