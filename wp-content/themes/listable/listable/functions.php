@@ -735,7 +735,7 @@ $wpdb->insert(
 		'lat' => $post->geolocation_lat,
 		'lon' => $post->geolocation_long,
 		'icon' => 'pin-export.png',
-		'popuptext' => '<strong><a href=\"http://usefaircoindev.fair.coop/listings/secret-garden/\">Secret Garden</a></strong>',
+		'popuptext' => '<strong><a href=\"'.get_post_permalink($post).'/\">'.$post->post_title.'</a></strong>',
 		'zoom' => 11,
 		'mapwidth' => 640,
 		'mapwidthunit' => 'px',
