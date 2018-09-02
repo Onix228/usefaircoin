@@ -124,3 +124,63 @@ function listable_child_overwrite_files() {
 // The default priority of any action is 10
 
 */
+
+
+// Adds login buttons to the wp-login.php pages
+function add_wc_social_login_buttons_wplogin() {
+
+	// Displays login buttons to non-logged in users + redirect back to login
+	if(function_exists("woocommerce_social_login_buttons")) {
+		woocommerce_social_login_buttons();
+	}
+
+}
+add_action( 'login_form', 'add_wc_social_login_buttons_wplogin' );
+add_action( 'register_form', 'add_wc_social_login_buttons_wplogin' );
+
+// Changes the login text from what's set in our WooCommerce settings so we're not talking about checkout while logging in.
+function change_social_login_text_option( $login_text ) {
+
+	global $pagenow;
+
+	// Only modify the text from this option if we're on the wp-login page
+	if( 'wp-login.php' === $pagenow ) {
+		// Adjust the login text as desired
+		$login_text = esc_html__( 'You can also create an account with a social network.', 'woocommerce-social-login' );
+	}
+
+ 	return $login_text;
+}
+add_filter( 'pre_option_wc_social_login_text', 'change_social_login_text_option' );
+
+function listable_sync_to_mapsmarkers($post) {
+	if( 'job_listing' != get_post_type( $post ) ) {
+		return;
+	}
+
+	global $wpdb;
+
+	$wpdb->insert( 
+	'upleafletmapsmarker_markers', 
+		array( 
+		'markername' => $post->post_title, 
+		'basemap' => 'osm_mapnik',
+		'layer' => '1',
+		'lat' => $post->geolocation_lat,
+		'lon' => $post->geolocation_long,
+		'icon' => 'pin-export.png',
+		'popuptext' => '<strong><a href=\"'.get_post_permalink($post).'/\">'.$post->post_title.'</a></strong>',
+		'zoom' => 11,
+		'mapwidth' => 640,
+		'mapwidthunit' => 'px',
+		'mapheight' => 480,
+		'panel' => 1,
+		'createdby' => 'Admin',
+		'controlbox' => 1,
+		'address' => $post->geolocation_formatted_address,
+		)
+	);
+
+}
+add_action('pending_to_publish', 'listable_sync_to_mapsmarkers');
+add_action('pending_payment_to_publish', 'listable_sync_to_mapsmarkers');
