@@ -20,7 +20,7 @@ get_header(); ?>
 			<header class="entry-header">
 				<div class="entry-featured"></div>
 				<div class="header-content">
-					<h1 class="entry-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.-N U L L 24 . NET', 'listable' ); ?></h1>
+					<h1 class="entry-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.', 'listable' ); ?></h1>
 				</div>
 			</header><!-- .entry-header -->
 
