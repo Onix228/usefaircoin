@@ -57,7 +57,7 @@ $listing_classes = apply_filters( 'listable_listing_archive_classes', $listing_c
 		<?php echo $data_output; ?> >
 		<?php	$listable_card_image = listable_get_post_image_src( $post->ID, 'listable-card-image');
 			if($listable_card_image == "") {
-				$card_image = "/wp-content/uploads/2018/07/faircoop_color-1-450x348.png";
+				$card_image = get_stylesheet_directory_uri()."/assets/img/faircoop-logo-color-450x348.png";
 			} else {
 				$card_image = $listable_card_image;
 			}
