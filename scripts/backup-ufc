@@ -1,0 +1,15 @@
+#!/bin/sh
+# 5.5.2005 18:50 binsh
+# mysql backup script
+BASEDIR=~/backups
+TIMESTAMP=`date +%Y%m%d%H%M%S`
+#TIMESTAMP=`date +%u`
+USER=c17user
+PASSWORD=oyWu@H27
+DB=c17ufc2018
+
+DUMPFILE=$BASEDIR/$DB.dump.$TIMESTAMP.sql.gz
+
+echo "Dumping $DB to $DUMPFILE ..."
+mysqldump --create-options --user=$USER --password=$PASSWORD $DB | gzip > $DUMPFILE
+tar czf $BASEDIR/ufc-web.$TIMESTAMP.tar.gz /var/www/clients/client17/web20/web
