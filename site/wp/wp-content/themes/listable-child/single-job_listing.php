@@ -27,7 +27,11 @@ get_header(); ?>
 							$image = wp_get_attachment_image_src($myphoto, 'listable-featured-image' );
 							$src = $image[0];
 						?>
-							<div class="entry-cover-image" style="background-image: url(<?php echo listable_get_inline_background_image( $src ); ?>);"></div>
+							<?php if ($src != ''): ?>
+								<div class="entry-cover-image" style="background-image: url(<?php echo listable_get_inline_background_image( $src ); ?>);"></div>
+							<?php else: ?>
+								<div class="entry-cover-image" style="background-image: url(<?php echo get_stylesheet_directory_uri()."/assets/img/faircoop-logo-color-450x348.png"; ?>);"></div>
+							<?php endif; ?>
 						<?php else: ?>
 							<div class="entry-featured-gallery">
 								<?php foreach ($photos as $key => $photo_id):
