@@ -57,13 +57,6 @@
 	<div class="card-pin-svg"><?php get_template_part( 'assets/svg/pin-simple-svg' ); ?></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/places.js@1.9.1"></script>
-<script>
-  var placesAutocomplete = places({
-    container: document.querySelector('#job_location')
-  });
-</script>
-
 <?php wp_footer(); ?>
 
 </body>

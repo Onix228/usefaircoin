@@ -184,3 +184,13 @@ function listable_sync_to_mapsmarkers($post) {
 }
 add_action('pending_to_publish', 'listable_sync_to_mapsmarkers');
 add_action('pending_payment_to_publish', 'listable_sync_to_mapsmarkers');
+
+function algolia_autocomplete($hook) {
+    if ( 'post.php' != $hook) {
+        return;
+    }
+
+    wp_enqueue_script( 'algolia_places', "https://cdn.jsdelivr.net/npm/places.js@1.9.1");
+    wp_enqueue_script( 'algolia_geocoding', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true );
+}
+add_action( 'admin_enqueue_scripts', 'algolia_autocomplete', 'in_footer');
