@@ -10,7 +10,7 @@ $posts = get_posts( array (  'numberposts' => -1,
 foreach ( $posts as $post )
 {
     if($post->geolocation_lat || $post->geolocation_long) {
-    {   
+    {
 
         $category = get_the_terms( get_the_ID(), 'job_listing_category' );
 

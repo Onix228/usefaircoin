@@ -160,15 +160,25 @@ function listable_sync_to_mapsmarkers($post) {
 
 	global $wpdb;
 
-	$wpdb->insert( 
-	'upleafletmapsmarker_markers', 
-		array( 
-		'markername' => $post->post_title, 
+        $category = get_the_terms( get_the_ID(), 'job_listing_category' );
+
+        $icon_url = listable_get_term_icon_url( $category[0]->name );
+        $attachment_id = listable_get_term_icon_id( $category[0]->term_id );
+        $image_url = get_attached_file( $attachment_id );
+        $image_filename = basename($image_url);
+        if(!file_exists($image_url)) {
+                printf("* Marker image not found : %s\n", $image_url);
+        }
+
+	$wpdb->insert(
+	'upleafletmapsmarker_markers',
+		array(
+		'markername' => $post->post_title,
 		'basemap' => 'osm_mapnik',
 		'layer' => '1',
 		'lat' => $post->geolocation_lat,
 		'lon' => $post->geolocation_long,
-		'icon' => 'pin-export.png',
+		'icon' => $image_filename,
 		'popuptext' => '<strong><a href=\"'.get_post_permalink($post).'/\">'.$post->post_title.'</a></strong>',
 		'zoom' => 11,
 		'mapwidth' => 640,
@@ -194,3 +204,55 @@ function algolia_autocomplete($hook) {
     wp_enqueue_script( 'algolia_geocoding', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true );
 }
 add_action( 'admin_enqueue_scripts', 'algolia_autocomplete', 'in_footer');
+
+function algolia_geocode( $post_id ) {
+    apply_filters( 'job_manager_geolocation_enabled', false );
+    $post = get_post($post);
+    ufc_update_post($post);
+    listable_sync_to_mapsmarkers($post);
+}
+add_action('job_manager_save_job_listing', 'algolia_geocode', 20, 2 );
+
+function ufc_get_geolocation($location) {
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        $post_data = array('query' => $location);
+        $data_string = json_encode($post_data);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => 'https://places-dsn.algolia.net/1/places/query',
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $data_string,
+            CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+
+        return $resp;
+}
+
+function ufc_update_post($post) {
+    if(!$post instanceof WP_Post) {
+    }
+
+        if($post->_job_location != "") {
+
+                $geolocation = ufc_get_geolocation($post->_job_location);
+                $decoded = json_decode($geolocation);
+                $hits = count($decoded);
+                $lat = $decoded->hits[0]->_geoloc->lat;
+                $lon = $decoded->hits[0]->_geoloc->lng;
+                #printf("id,found,name,address,lat,lon\n");
+                #printf("%s, %s,\"%s\",\"%s\",%s,%s\n", $post->ID, $hits, $post->post_title, $post->_job_location, $lat, $lon);
+                if($lat && $lon) {
+                        update_post_meta( $post->ID, 'geolocation_lat', $lat );
+                        update_post_meta( $post->ID, 'geolocation_long', $lon );
+                }
+        }
+}

@@ -82,6 +82,6 @@ global $job_manager;
 		<?php do_action( 'submit_job_form_disabled' ); ?>
 
 	<?php endif; ?>
-<?php wp_enqueue_script( 'my_custom_script', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true ); ?>
 </form>
+<?php wp_enqueue_script( 'algolia_geocoding', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true ); ?>
 <script src="https://cdn.jsdelivr.net/npm/places.js@1.10.0"></script>
