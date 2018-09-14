@@ -239,8 +239,6 @@ function algolia_geocode( $post_id ) {
 //add_action('job_manager_save_job_listing', 'algolia_geocode', 20, 2 );
 
 function set_location_coords( $post_id ) {
-	#error_log("SETTING LOCATION COORDS: ".$_COOKIE['job_location_lat']);
-	#error_log("SETTING LOCATION COORDS: ".$_COOKIE['job_location_lon']);
         $post = get_post($post);
 	update_post_meta( $post->ID, 'geolocation_lat', $_COOKIE['job_location_lat'] );
 	update_post_meta( $post->ID, 'geolocation_long', $_COOKIE['job_location_lon'] );
