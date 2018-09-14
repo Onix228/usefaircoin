@@ -125,6 +125,19 @@ function listable_child_overwrite_files() {
 
 */
 
+function listable_child_overwrite_files() {
+	wp_deregister_script('google-maps');
+	wp_enqueue_script('google-maps','https://maps.googleapis.com/maps/api/js?key='.(!empty($google_api_key) ? $google_api_key : 'AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es').'&libraries=places&language=en',array('jquery-core','jquery','gaaf-custom'),'',true);
+}
+add_action( 'wp_enqueue_scripts', 'listable_child_overwrite_files', 11 );
+
+function admin_google_maps() {
+	wp_enqueue_script('gaaf-custom', get_stylesheet_directory_uri().'/assets/js/gaaf-custom.js',array('jquery-core','jquery'),'',true);
+	//wp_enqueue_script('google-maps2','https://maps.googleapis.com/maps/api/js?key='.(!empty($google_api_key) ? $google_api_key : 'AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es').'&libraries=places&language=en',array('jquery-core','jquery','gaaf-custom'),'',true);
+	listable_child_overwrite_files();
+}
+add_action( 'admin_enqueue_scripts', 'admin_google_maps', 11 );
+
 
 // Adds login buttons to the wp-login.php pages
 function add_wc_social_login_buttons_wplogin() {
@@ -195,6 +208,7 @@ function listable_sync_to_mapsmarkers($post) {
 add_action('pending_to_publish', 'listable_sync_to_mapsmarkers');
 add_action('pending_payment_to_publish', 'listable_sync_to_mapsmarkers');
 
+/*
 function algolia_autocomplete($hook) {
     if ( 'post.php' != $hook) {
         return;
@@ -204,8 +218,9 @@ function algolia_autocomplete($hook) {
     wp_enqueue_script( 'algolia_geocoding', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true );
 }
 add_action( 'admin_enqueue_scripts', 'algolia_autocomplete', 'in_footer');
-
+*/
 function algolia_geocode( $post_id ) {
+return;
     apply_filters( 'job_manager_geolocation_enabled', false );
     $post = get_post($post);
     ufc_update_post($post);
@@ -254,5 +269,6 @@ function ufc_update_post($post) {
                         update_post_meta( $post->ID, 'geolocation_lat', $lat );
                         update_post_meta( $post->ID, 'geolocation_long', $lon );
                 }
-        }
+        } 
 }
+
