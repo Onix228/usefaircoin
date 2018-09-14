@@ -126,13 +126,25 @@ function listable_child_overwrite_files() {
 */
 
 function listable_child_overwrite_files() {
+        $google_api_key = get_option('gaaf_field_api_key');
+	wp_deregister_script('gaaf-custom');
+	wp_enqueue_script('gaaf-custom', get_stylesheet_directory_uri().'/assets/js/gaaf-custom.js',array('jquery-core','jquery'),'',true);
 	wp_deregister_script('google-maps');
 	wp_enqueue_script('google-maps','https://maps.googleapis.com/maps/api/js?key='.(!empty($google_api_key) ? $google_api_key : 'AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es').'&libraries=places&language=en',array('jquery-core','jquery','gaaf-custom'),'',true);
 }
 add_action( 'wp_enqueue_scripts', 'listable_child_overwrite_files', 11 );
 
+//add_action( 'wp_enqueue_scripts', 'gaaf_google_enqueue_scripts2', 999 );
+function gaaf_google_enqueue_scripts2() {
+        $google_api_key = get_option('gaaf_field_api_key');
+	wp_enqueue_script('gaaf-custom2', get_stylesheet_directory_uri().'/assets/js/gaaf-custom.js',array('jquery-core','jquery'),'',true);
+	wp_deregister_script('google-maps');
+        wp_enqueue_script('google-maps','https://maps.googleapis.com/maps/api/js?key='.(!empty($google_api_key) ? $google_api_key : 'AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es').'&libraries=places',array('jquery-core','jquery','gaaf-custom'),'',true);
+
+}
+
+
 function admin_google_maps() {
-	wp_enqueue_script('gaaf-custom', get_stylesheet_directory_uri().'/assets/js/gaaf-custom.js',array('jquery-core','jquery'),'',true);
 	//wp_enqueue_script('google-maps2','https://maps.googleapis.com/maps/api/js?key='.(!empty($google_api_key) ? $google_api_key : 'AIzaSyB16sGmIekuGIvYOfNoW9T44377IU2d2Es').'&libraries=places&language=en',array('jquery-core','jquery','gaaf-custom'),'',true);
 	listable_child_overwrite_files();
 }
@@ -208,7 +220,6 @@ function listable_sync_to_mapsmarkers($post) {
 add_action('pending_to_publish', 'listable_sync_to_mapsmarkers');
 add_action('pending_payment_to_publish', 'listable_sync_to_mapsmarkers');
 
-/*
 function algolia_autocomplete($hook) {
     if ( 'post.php' != $hook) {
         return;
@@ -217,18 +228,26 @@ function algolia_autocomplete($hook) {
     wp_enqueue_script( 'algolia_places', "https://cdn.jsdelivr.net/npm/places.js@1.9.1");
     wp_enqueue_script( 'algolia_geocoding', get_stylesheet_directory_uri() . '/assets/js/geocoding-autocomplete.js', null, null, true );
 }
-add_action( 'admin_enqueue_scripts', 'algolia_autocomplete', 'in_footer');
-*/
+//add_action( 'admin_enqueue_scripts', 'algolia_autocomplete', 'in_footer');
+
 function algolia_geocode( $post_id ) {
-return;
     apply_filters( 'job_manager_geolocation_enabled', false );
     $post = get_post($post);
     ufc_update_post($post);
     listable_sync_to_mapsmarkers($post);
 }
-add_action('job_manager_save_job_listing', 'algolia_geocode', 20, 2 );
+//add_action('job_manager_save_job_listing', 'algolia_geocode', 20, 2 );
 
-function ufc_get_geolocation($location) {
+function set_location_coords( $post_id ) {
+	#error_log("SETTING LOCATION COORDS: ".$_COOKIE['job_location_lat']);
+	#error_log("SETTING LOCATION COORDS: ".$_COOKIE['job_location_lon']);
+        $post = get_post($post);
+	update_post_meta( $post->ID, 'geolocation_lat', $_COOKIE['job_location_lat'] );
+	update_post_meta( $post->ID, 'geolocation_long', $_COOKIE['job_location_lon'] );
+}
+add_action('job_manager_save_job_listing', 'set_location_coords', 20, 2 );
+
+function algolia_get_geolocation($location) {
         // Get cURL resource
         $curl = curl_init();
         // Set some options - we are passing in a useragent too here
