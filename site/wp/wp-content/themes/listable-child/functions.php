@@ -185,9 +185,10 @@ function listable_sync_to_mapsmarkers($post) {
 		return;
 	}
 
-	if(!($post->geolocation_lat && $post->geolocation_long))
+	if(!($post->geolocation_lat && $post->geolocation_long)) {
+		error_log("* ERROR: no coords found on listable_sync_to_mapsmarkers.");
 		return;
-
+	}
 
 	global $wpdb;
 
@@ -198,7 +199,7 @@ function listable_sync_to_mapsmarkers($post) {
         $image_url = get_attached_file( $attachment_id );
         printf("* IMAGE: %s\n", $image_url);
 
-        if(!file_exists($image_url)) return;
+        // FIXME : if category has no image assign default
 
         $image_filename = basename($image_url);
         if(!file_exists($image_url)) {
@@ -263,7 +264,7 @@ function set_location_coords( $post_id ) {
 }
 add_action('job_manager_job_submitted', 'set_location_coords', 20, 2 );
 add_action('job_manager_save_job_listing', 'set_location_coords', 20, 2 );
-add_action('job_manager_save_job_listing', 'listable_sync_to_mapsmarkers', 20, 2);
+add_action('job_manager_save_job_listing', 'listable_sync_to_mapsmarkers', 21, 2);
 
 function algolia_get_geolocation($location) {
         // Get cURL resource
