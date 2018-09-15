@@ -251,9 +251,11 @@ function algolia_geocode( $post_id ) {
 
 function set_location_coords( $post_id ) {
         $post = get_post($post_id);
+	error_log("* Updating %s", $post->ID);
 	update_post_meta( $post->ID, 'geolocation_street', $post->_job_location );
 	if(!empty($_COOKIE['job_location_lat'])) {
 		update_post_meta( $post->ID, 'geolocation_lat', $_COOKIE['job_location_lat'] );
+		error_log("* Updating %s with job_location_lat %s", $post->ID, $_COOKIE['job_location_lat']);
 		unset($_COOKIE['job_location_lat']);
 	}
 	
@@ -265,6 +267,8 @@ function set_location_coords( $post_id ) {
 add_action('job_manager_job_submitted', 'set_location_coords', 20, 2 );
 add_action('job_manager_save_job_listing', 'set_location_coords', 20, 2 );
 add_action('job_manager_save_job_listing', 'listable_sync_to_mapsmarkers', 21, 2);
+add_action( 'job_manager_update_job_data', 'set_location_coords', 10, 2 );
+add_action( 'job_manager_update_job_data', 'listable_sync_to_mapsmarkers', 10, 2 );
 
 function algolia_get_geolocation($location) {
         // Get cURL resource
