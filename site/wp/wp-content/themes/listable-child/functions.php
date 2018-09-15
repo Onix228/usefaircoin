@@ -178,11 +178,16 @@ function change_social_login_text_option( $login_text ) {
 }
 add_filter( 'pre_option_wc_social_login_text', 'change_social_login_text_option' );
 
-function listable_sync_to_mapsmarkers($post_id) {
-	$post = get_post( $post_id );
+function listable_sync_to_mapsmarkers($post) {
+	if(!$post instanceof WP_Post)
+		$post = get_post( $post );
 	if( 'job_listing' != get_post_type( $post ) ) {
 		return;
 	}
+
+	if(!($post->geolocation_lat && $post->geolocation_long))
+		return;
+
 
 	global $wpdb;
 
@@ -191,6 +196,10 @@ function listable_sync_to_mapsmarkers($post_id) {
         $icon_url = listable_get_term_icon_url( $category[0]->name );
         $attachment_id = listable_get_term_icon_id( $category[0]->term_id );
         $image_url = get_attached_file( $attachment_id );
+        printf("* IMAGE: %s\n", $image_url);
+
+        if(!file_exists($image_url)) return;
+
         $image_filename = basename($image_url);
         if(!file_exists($image_url)) {
                 printf("* Marker image not found : %s\n", $image_url);
