@@ -186,8 +186,6 @@ function listable_sync_to_mapsmarkers($post_id) {
 
 	global $wpdb;
 
-
-
         $category = get_the_terms( get_the_ID(), 'job_listing_category' );
 
         $icon_url = listable_get_term_icon_url( $category[0]->name );
@@ -215,7 +213,7 @@ function listable_sync_to_mapsmarkers($post_id) {
 		'panel' => 1,
 		'createdby' => 'Admin',
 		'controlbox' => 1,
-		'address' => $post->geolocation_formatted_address,
+		'address' => $post->geolocation_street,
 		)
 	);
 
