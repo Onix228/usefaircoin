@@ -178,12 +178,15 @@ function change_social_login_text_option( $login_text ) {
 }
 add_filter( 'pre_option_wc_social_login_text', 'change_social_login_text_option' );
 
-function listable_sync_to_mapsmarkers($post) {
+function listable_sync_to_mapsmarkers($post_id) {
+	$post = get_post( $post_id );
 	if( 'job_listing' != get_post_type( $post ) ) {
 		return;
 	}
 
 	global $wpdb;
+
+
 
         $category = get_the_terms( get_the_ID(), 'job_listing_category' );
 
@@ -239,11 +242,21 @@ function algolia_geocode( $post_id ) {
 //add_action('job_manager_save_job_listing', 'algolia_geocode', 20, 2 );
 
 function set_location_coords( $post_id ) {
-        $post = get_post($post);
-	update_post_meta( $post->ID, 'geolocation_lat', $_COOKIE['job_location_lat'] );
-	update_post_meta( $post->ID, 'geolocation_long', $_COOKIE['job_location_lon'] );
+        $post = get_post($post_id);
+	update_post_meta( $post->ID, 'geolocation_street', $post->_job_location );
+	if(!empty($_COOKIE['job_location_lat'])) {
+		update_post_meta( $post->ID, 'geolocation_lat', $_COOKIE['job_location_lat'] );
+		unset($_COOKIE['job_location_lat']);
+	}
+	
+	if(!empty($_COOKIE['job_location_lon'])) {
+		update_post_meta( $post->ID, 'geolocation_long', $_COOKIE['job_location_lon'] );
+		unset($_COOKIE['job_location_lon']);
+	}
 }
+add_action('job_manager_job_submitted', 'set_location_coords', 20, 2 );
 add_action('job_manager_save_job_listing', 'set_location_coords', 20, 2 );
+add_action('job_manager_save_job_listing', 'listable_sync_to_mapsmarkers', 20, 2);
 
 function algolia_get_geolocation($location) {
         // Get cURL resource
@@ -289,3 +302,17 @@ function ufc_update_post($post) {
         } 
 }
 
+
+/*
+Display the full address (set from post->_job_location to geolocation_street meta value)
+https://pixelgrade.com/docs/faq/modify-listing-address-format/
+*/
+function custom_listing_address($formats) {
+	$formats = array(
+		'default' => '<div itemprop="streetAddress">
+					<span class="address__street">{geolocation_street}</span>
+				</div>
+				<span class="address__country-short" itemprop="addressCountry">{geolocation_country_short}</span>');
+	return $formats;
+}
+add_filter('listable_localisation_address_formats', 'custom_listing_address', 15);

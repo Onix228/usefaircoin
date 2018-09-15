@@ -3,7 +3,6 @@
 function wnw_set_google_autocomplete(){
 	jQuery('#job_location,#_job_location').each(function(){
 											  
-		console.log((this));
 		var autocomplete= new google.maps.places.Autocomplete(
 		/** @type {HTMLInputElement} */(this),
 		{ types: ['geocode'] });
@@ -11,8 +10,9 @@ function wnw_set_google_autocomplete(){
 		// populate the address fields in the form.
                 google.maps.event.addListener(autocomplete, 'place_changed', function() {
                         var place = autocomplete.getPlace();
-                        document.cookie = "job_location_lat="+place.geometry.location.lat();
-                        document.cookie = "job_location_lon="+place.geometry.location.lng();
+	                        console.log("job_location_lat="+place.geometry.location.lat());
+        	                document.cookie = "job_location_lat="+place.geometry.location.lat();
+	                        document.cookie = "job_location_lon="+place.geometry.location.lng();
                 });
 	});
 }
