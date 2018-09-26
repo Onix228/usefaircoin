@@ -30,7 +30,7 @@ get_header(); ?>
 							<?php if ($src != ''): ?>
 								<div class="entry-cover-image" style="background-image: url(<?php echo listable_get_inline_background_image( $src ); ?>);"></div>
 							<?php else: ?>
-								<div class="entry-cover-image" style="background-image: url(<?php echo get_stylesheet_directory_uri()."/assets/img/faircoop-logo-color-450x348.png"; ?>);"></div>
+								<div class="entry-cover-image" style="background-image: url(<?php echo get_stylesheet_directory_uri()."/assets/img/listing-default-faircoop.png"; ?>);"></div>
 							<?php endif; ?>
 						<?php else: ?>
 							<div class="entry-featured-gallery">
@@ -43,7 +43,7 @@ get_header(); ?>
 					</div>
 
 				<?php else: ?>
-					<div class="entry-cover-image" style="background-image: url(<?php echo get_stylesheet_directory_uri()."/assets/img/faircoop-logo-color-450x348.png"; ?> ); ?>);"></div>
+					<div class="entry-cover-image" style="background-image: url(<?php echo get_stylesheet_directory_uri()."/assets/img/listing-default-faircoop.png"; ?> ); ?>);"></div>
 				<?php endif; ?>
 
 				<div>
