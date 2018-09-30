@@ -34,3 +34,75 @@ specifically the 'Template: listable' line. */
 .theme-info{
     visibility: hidden;
 }
+
+body {
+	background: white!important;
+}
+
+
+.action--review {
+	border-radius: 2rem;
+	color: black!important;
+	border: solid 1px #ddd;
+	padding: 0.5rem;
+	padding-right: 1rem;
+}
+
+.site-footer {
+	background: black!important;
+}
+
+html, .job_filters, .page-package-selection .hentry.hentry, .single-job_listing .listing-sidebar--main .widget:not(.widget_listing_tags):not(.widget_listing_actions):not(.widget_listing_comments), .listing-sidebar--top .widget, .listing-sidebar--bottom, .listing-sidebar--main .comment-respond, .page-add-listing .entry-content, .page-add-listing fieldset:first-child, .woocommerce-account:not(.logged-in) .entry-content .woocommerce form, .post-password-form, .page-listings div.job_listings .load_more_jobs strong {
+	border-radius: 1rem;
+	box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12), 0 1px 1px 0 rgba(0,0,0,.24);
+}
+
+
+.nav-links a {
+	border-radius: 1rem;
+color: black!important;
+border: solid 1px #ddd;
+}
+
+#map {
+	border-radius: 1rem;
+}
+
+.widget_listing_sidebar_gallery .listing-gallery__item img {
+	border-radius: 1rem!important;
+}
+
+.single_job_listing .job_description {
+	margin-bottom: 0!important;
+}
+
+.listing-address, .listing-address-directions {
+	margin: 0.5rem!important;
+}
+
+.widget_listing_sidebar_map {
+	padding: 0.5rem;
+}
+
+.entry-featured-image {
+	margin: 0!important;
+}
+
+.entry-featured-carousel {
+	background: #ddd;
+}
+
+.listing-sidebar .widget, .grid__item .listing-sidebar {
+	margin: 0.5rem!important;
+	display: inline-block!important;
+	width: calc(100% - 1rem)!important;
+}
+
+#listing_sidebar_map-2 {
+	margin: 0!important;
+	width: 100%!important;
+}
+
+.single-job_listing .single_job_listing .grid__item, .single-job_listing .single_job_listing .product-content > * {
+	padding: 0.5rem!important;
+}
